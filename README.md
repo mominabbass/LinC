@@ -40,7 +40,7 @@ python run_classification.py \
 To execute different experiments, specify the desired arguments in the above command from the corresponding .sh file.
 
 ## Citation
-If you find our work, this repository, or pretrained models useful, please consider giving a star :star: and citation.
+If you find our work, or this repository useful, please consider giving a star :star: and citation.
 ```bibtex
 @inproceedings{abbas2024,
  author    = {Abbas, Momin and Zhou, Yi and Ram, Parikshit and Baracaldo, Nathalie and Samulowitz, Horst and Salonidis, Theodoros and Chen, Tianyi},
