@@ -22,7 +22,7 @@ conda activate fewshot_a10
 We provide evaluation support for SST-2, SST-5, AGNews, TREC, DBPedia, RTE, and Subj datasets. You have the flexibility to incorporate additional text-classification datasets by defining the prompt format and label space in a manner similar to the existing datasets in data_utils.py.
 
 ## Evaluation
-You can replicate the results in our paper by running the ssh scripts in the `cls_ssh` folder. For example, to run SST-2 0-shot on GPT-J, run: `sh cls_sst2_gptj_0shot.sh`. Alternatively, copy and paste the contents of the .sh file into the terminal as follows:
+You can replicate the results in our paper by running the ssh scripts in the `cls_ssh` folder. For example, to run SST-2 0-shot on GPT-J, run: `sh examples_ssh/cls_sst2_gptj_0shot.sh`. Alternatively, copy and paste the contents of the .sh file into the terminal as follows:
 
 ```
 python run_classification.py \
@@ -38,6 +38,8 @@ python run_classification.py \
 ```
 
 To execute different experiments, specify the desired arguments in the above command from the corresponding .sh file.
+
+Note that following code refactoring, the training sets used in our results might have changed. Expect slight result variations, but the trends should remain consistent with our results.
 
 ## Citation
 If you find our work, or this repository useful, please consider giving a star :star: and citation.
@@ -58,4 +60,3 @@ Should you have any inquiries, reach out to us via email at abbasm2@rpi.edu.
 ## Acknowledgements
 
 Our code is built upon [Contextual Calibration](https://github.com/tonyzhaozh/few-shot-learning) repository, and we extend our appreciation to the authors for sharing their code. Should you decide to use our model and code, we kindly request you to acknowledge and cite these works as well.
-
