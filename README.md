@@ -38,3 +38,24 @@ python run_classification.py \
 ```
 
 To execute different experiments, specify the desired arguments in the above command from the corresponding .sh file.
+
+## Citation
+If you find our work, this repository, or pretrained models useful, please consider giving a star :star: and citation.
+```bibtex
+@inproceedings{abbas2024,
+ author    = {Abbas, Momin and Zhou, Yi and Ram, Parikshit and Baracaldo, Nathalie and Samulowitz, Horst and Salonidis, Theodoros and Chen, Tianyi},
+ title     = {Enhancing In-context Learning via Linear Probe Calibration},
+ year      = {2024},
+ booktitle = {Proceedings of The 27th International Conference on Artificial Intelligence and Statistics},,
+ }
+
+```
+
+## Contact
+Should you have any inquiries, reach out to us via email at abbasm2@rpi.edu.
+
+
+## Acknowledgements
+
+Our code is built upon [Contextual Calibration](https://github.com/tonyzhaozh/few-shot-learning) repository, and we extend our appreciation to the authors for sharing their code. Should you decide to use our model and code, we kindly request you to acknowledge and cite these works as well.
+
