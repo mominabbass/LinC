@@ -57,5 +57,5 @@ Should you have any inquiries, reach out to us via email at abbasm2@rpi.edu.
 
 ## Acknowledgements
 
-Our code is built upon [Contextual Calibration](https://github.com/tonyzhaozh/few-shot-learning) repository, and we extend our appreciation to the authors for sharing their code. Should you decide to use our model and code, we kindly request you to acknowledge and cite these works as well.
+Our code is built upon [Contextual Calibration](https://github.com/tonyzhaozh/few-shot-learning) repository, and we extend our appreciation to the authors for sharing their code. Should you decide to use our model and code, please consider citing their work as well.
 
