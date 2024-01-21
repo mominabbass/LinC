@@ -1,6 +1,6 @@
 # Linear Probe Calibration (LinC)
 
-This codebase is compatible with GPT-J, GPT-2, Llama-2, and any other language model available in [HuggingFace Transformers](https://huggingface.co/models).
+This codebase is compatible with GPT-2, GPT-J, Llama-2, and any other language model available in [HuggingFace Transformers](https://huggingface.co/models).
 
 
 ## Dependencies
