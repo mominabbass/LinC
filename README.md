@@ -1,11 +1,11 @@
 # Linear Probe Calibration (LinC)
 
-This codebase is built using [contextual calibration](https://github.com/tonyzhaozh/few-shot-learning). It is compatible with GPT-J, GPT-2, and any other language model available in [HuggingFace Transformers](https://huggingface.co/models).
+This codebase is built using [contextual calibration](https://github.com/tonyzhaozh/few-shot-learning). It is compatible with GPT-J, GPT-2, Llama-2, and any other language model available in [HuggingFace Transformers](https://huggingface.co/models).
 
 
 ## Dependencies
 
-The code is implemented using PyTorch and the [HuggingFace's Transformer repository](https://github.com/huggingface/pytorch-transformers). If you intend to run the code on a local model like GPT-2, it necessitates a single GPU.
+The code is implemented using PyTorch and the [HuggingFace's Transformer repository](https://github.com/huggingface/pytorch-transformers). If you intend to run the code on a small local model like GPT-2, it necessitates a single GPU.
 
 ## Installation
 To setup the anaconda environment, simply run the following command:
