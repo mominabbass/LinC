@@ -39,8 +39,6 @@ python run_classification.py \
 
 To execute different experiments, specify the desired arguments in the above command from the corresponding .sh file.
 
-Note that following code refactoring, the training sets used in our results might have changed. Expect slight result variations, but the trends should remain consistent with our results.
-
 ## Citation
 If you find our work, or this repository useful, please consider giving a star :star: and citation.
 ```bibtex
@@ -60,3 +58,4 @@ Should you have any inquiries, reach out to us via email at abbasm2@rpi.edu.
 ## Acknowledgements
 
 Our code is built upon [Contextual Calibration](https://github.com/tonyzhaozh/few-shot-learning) repository, and we extend our appreciation to the authors for sharing their code. Should you decide to use our model and code, we kindly request you to acknowledge and cite these works as well.
+

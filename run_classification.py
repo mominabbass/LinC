@@ -1,5 +1,6 @@
 import argparse
-from data_utils import load_dataset
+import torch
+from data_utils import load_dataset_custom
 from utils import *
 import torch.nn as nn
 from torch.autograd import Variable
@@ -60,9 +61,8 @@ def save_results(params_list, freeze_test_set=True):
         curr_seed = params['val_seed']
 
         ### load data
-        all_train_sentences, all_train_labels, all_test_sentences, all_test_labels, all_val_sentences, all_val_labels = load_dataset(
+        all_train_sentences, all_train_labels, all_test_sentences, all_test_labels, all_val_sentences, all_val_labels = load_dataset_custom(
             params)
-        params_check(params)
 
         ### sample test set
         if params['subsample_test_set'] is None:
@@ -98,24 +98,34 @@ def save_results(params_list, freeze_test_set=True):
         # obtaining model's response on test examples
         print(f"getting raw resp for {len(test_sentences)} test sentences")
 
+        params_check(params, all_train_sentences, all_train_labels, train_sentences, train_labels, val_sentences,
+                     val_labels, test_sentences, test_labels)
         # get prob for each label
-        _, all_label_probs = get_model_response(params, train_sentences, train_labels, test_sentences)
+        _, all_label_probs = get_model_response(params, all_train_sentences, all_train_labels, train_sentences,
+                                                train_labels, val_sentences, val_labels, test_sentences, test_labels)
 
         # calculate P_cf
         content_free_inputs = ["N/A", "", "[MASK]"]
-        p_cf = get_p_content_free(params, train_sentences, train_labels,
+        p_cf = get_p_content_free(params, all_train_sentences, all_train_labels, train_sentences, train_labels,
+                                  val_sentences, val_labels, test_labels,
                                   content_free_inputs=content_free_inputs)  ##type: numpy array e.g. [0.13829783 0.86170214] for SST2
 
-        # acc_original, entropy_original = eval_accuracy(all_label_probs, test_labels, all_train_sentences,
+        # acc_original, entropy_original, prob_original, ECE_original = eval_accuracy(all_label_probs, test_labels, all_train_sentences,
         #                                                all_train_labels,
         #                                                val_sentences, val_labels, params, lr, epochs, curr_seed)
-        acc_calibrated, entropy_calibrated = eval_accuracy(all_label_probs, test_labels, all_train_sentences,
-                                                           all_train_labels,
-                                                           val_sentences, val_labels, params, lr, epochs,
-                                                           curr_seed, mode="diagonal_W",
-                                                           p_cf=p_cf)
+        acc_calibrated, entropy_calibrated, prob_calibrated, ECE_calibrated = eval_accuracy(all_label_probs,
+                                                                                            test_labels,
+                                                                                            all_train_sentences,
+                                                                                            all_train_labels,
+                                                                                            val_sentences, val_labels,
+                                                                                            params, lr, epochs,
+                                                                                            curr_seed,
+                                                                                            mode="diagonal_W",
+                                                                                            p_cf=p_cf)
         accuracies = [acc_calibrated]
+        ECE = [ECE_calibrated]
         print(f"Accuracies: {accuracies}")
+        print(f"Calibration Errors (ECE): {ECE}")
         print(f"p_cf      : {p_cf}")
 
         # add to result_tree
@@ -138,6 +148,7 @@ def save_results(params_list, freeze_test_set=True):
         result_to_save['all_label_probs'] = all_label_probs
         result_to_save['p_cf'] = p_cf
         result_to_save['accuracies'] = accuracies
+        result_to_save['ECE'] = ECE
         if 'prompt_func' in result_to_save['params'].keys():
             params_to_save['prompt_func'] = None
         save_pickle(params, result_to_save)
@@ -150,15 +161,17 @@ def eval_accuracy(all_label_probs, test_labels, all_train_sentences, all_train_l
     # evaluate the accuracy with and without contextual calibration
     criterion = nn.CrossEntropyLoss()
     num_classes = all_label_probs.shape[1]
+    uncalib = 0
+
     if p_cf is None:
         # do not calibrate
         W = Variable(torch.eye(num_classes), requires_grad=True)
         b = Variable(torch.zeros([num_classes, 1]), requires_grad=True)
+        uncalib += 1
     else:
-        ## sample few-shot training examples
         np.random.seed(curr_seed)
         train_sentences, train_labels = random_sampling(all_train_sentences, all_train_labels, params['num_shots'])
-        _, all_val_label_probs = get_model_response(params, train_sentences, train_labels, val_sentences)
+        _, all_val_label_probs = get_model_response(params, all_train_sentences, all_train_labels, train_sentences, train_labels, val_sentences, val_labels, val_sentences, val_labels)
 
         # calibrate
         if mode == "diagonal_W":
@@ -173,6 +186,7 @@ def eval_accuracy(all_label_probs, test_labels, all_train_sentences, all_train_l
         optimizer = torch.optim.SGD([W, b], lr=lr)
 
         val_labels = np.array(val_labels)
+
         for epoch in range(epochs):
             all_val_label_probs, val_labels = shuffle(all_val_label_probs, val_labels, random_state=0)
 
@@ -192,12 +206,21 @@ def eval_accuracy(all_label_probs, test_labels, all_train_sentences, all_train_l
 
     entropy_list = []
     correctness_list = []
+    prob_list = []
     sft_mx = nn.Softmax(dim=0)
+    calib_prob = []
+
     assert len(all_label_probs) == len(test_labels)
+
     for label_probs, true_label in zip(all_label_probs, test_labels):
         label_probs = torch.tensor(label_probs) / torch.sum(torch.tensor(label_probs))  # normalize to 1
 
         calibrate_label_probs = torch.matmul(W.float(), torch.unsqueeze(label_probs, dim=-1).float()) + b.float()
+
+        if(uncalib == 1):
+            calib_prob.append(calibrate_label_probs[:,0].tolist())
+        else:
+            calib_prob.append(sft_mx(calibrate_label_probs)[:, 0].tolist())
 
         # calculate entropy
         if not (torch.isnan(calibrate_label_probs).any()):
@@ -205,13 +228,17 @@ def eval_accuracy(all_label_probs, test_labels, all_train_sentences, all_train_l
             entropy_list.append(H)
 
         ans_label = torch.argmax(calibrate_label_probs)
+        prob_list.append(round(sft_mx(calibrate_label_probs).detach().numpy()[true_label][0], 1))
 
         if ans_label == true_label:
             correctness_list.append(1)
         else:
             correctness_list.append(0)
     entropy_list = np.array(entropy_list)
-    return np.mean(correctness_list), entropy_list
+
+    ECE = expected_calibration_error(np.array(calib_prob), np.array(test_labels), M=10)[0]
+
+    return np.mean(correctness_list), entropy_list, prob_list, ECE
 
 def get_label_probs(params, raw_resp, train_sentences, train_labels, test_sentences):
     """Obtain model's label probability for each of the test examples. The returned prob is NOT normalized"""
@@ -282,10 +309,10 @@ def get_label_probs(params, raw_resp, train_sentences, train_labels, test_senten
 
     return all_label_probs  # NOT NORMALIZED
 
-def get_p_content_free(params, train_sentences, train_labels, content_free_inputs=('N/A',)):
+def get_p_content_free(params, all_train_sentences, all_train_labels, train_sentences, train_labels, val_sentences, val_labels, test_labels, content_free_inputs=('N/A')):
     """Query model with content free input, return its prediction probability for each label"""
 
-    _, all_p_y = get_model_response(params, train_sentences, train_labels, content_free_inputs, normalize=False)
+    _, all_p_y = get_model_response(params, all_train_sentences, all_train_labels, train_sentences, train_labels, val_sentences, val_labels, content_free_inputs, test_labels, normalize=False)
 
     p_y = np.mean(np.array(all_p_y), axis=0)
     p_y = p_y / np.sum(p_y)  # normalize

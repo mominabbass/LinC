@@ -479,7 +479,7 @@ def load_rte():
     return train_questions, train_answers, test_questions, test_answers, val_questions, val_answers
 
 
-def load_dataset(params):
+def load_dataset_custom(params):
     """
     Load train and test data
     :param params: experiment parameter, which contains dataset spec
