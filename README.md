@@ -22,7 +22,7 @@ conda activate fewshot_a10
 We provide evaluation support for SST-2, SST-5, AGNews, TREC, DBPedia, RTE, and Subj datasets. You have the flexibility to incorporate additional text-classification datasets by defining the prompt format and label space in a manner similar to the existing datasets in data_utils.py.
 
 ## Evaluation
-You can replicate the results in our paper by running the example sh scripts in the `cls_ssh` folder. For example, to run SST-2 0-shot on GPT-J, run: `sh examples_ssh/cls_sst2_gptj_0shot.sh`. Alternatively, copy and paste the contents of the .sh file into the terminal as follows:
+You can replicate the results in our paper by running the example sh scripts in the `examples_ssh` folder. For example, to run SST-2 0-shot on GPT-J, run: `sh examples_ssh/cls_sst2_gptj_0shot.sh`. Alternatively, copy and paste the contents of the .sh file into the terminal as follows:
 
 ```
 python run_classification.py \
