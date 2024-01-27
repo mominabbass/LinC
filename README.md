@@ -42,12 +42,12 @@ To execute different experiments, specify the desired arguments in the above com
 ## Citation
 If you find our work, or this repository useful, please consider giving a star :star: and citation.
 ```bibtex
-@inproceedings{abbas2024,
- author    = {Abbas, Momin and Zhou, Yi and Ram, Parikshit and Baracaldo, Nathalie and Samulowitz, Horst and Salonidis, Theodoros and Chen, Tianyi},
- title     = {Enhancing In-context Learning via Linear Probe Calibration},
- year      = {2024},
- booktitle = {Proceedings of The 27th International Conference on Artificial Intelligence and Statistics},,
- }
+@article{abbas2024enhancing,
+  title={Enhancing In-context Learning via Linear Probe Calibration},
+  author={Abbas, Momin and Zhou, Yi and Ram, Parikshit and Baracaldo, Nathalie and Samulowitz, Horst and Salonidis, Theodoros and Chen, Tianyi},
+  journal={arXiv preprint arXiv:2401.12406},
+  year={2024}
+}
 
 ```
 
