@@ -37,7 +37,7 @@ python run_classification.py \
 --val_seed=20230307
 ```
 
-To execute different experiments, specify the desired arguments in the above command from the corresponding .sh file. For any other expeirment, follow settings from the paper. 
+To execute different experiments, specify the desired arguments in the above command from the corresponding .sh file. For any other experiment, follow settings from the paper. 
 
 ## Citation
 If you find our work, or this repository useful, please consider giving a star :star: and citation.
