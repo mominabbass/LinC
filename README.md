@@ -1,7 +1,8 @@
-# Linear Probe Calibration (LinC)
+# Enhancing In-context Learning via Linear Probe Calibration [AISTATS 2024]
+
+[![paper](https://img.shields.io/badge/arXiv-Paper-<COLOR>.svg)](https://arxiv.org/abs/2401.12406)
 
 This codebase is compatible with GPT-2, GPT-J, Llama-2, and any other language model available in [HuggingFace Transformers](https://huggingface.co/models).
-
 
 ## Dependencies
 
@@ -42,11 +43,12 @@ To execute different experiments, specify the desired arguments in the above com
 ## Citation
 If you find our work, or this repository useful, please consider giving a star :star: and citation.
 ```bibtex
-@article{abbas2024enhancing,
-  title={Enhancing In-context Learning via Linear Probe Calibration},
-  author={Abbas, Momin and Zhou, Yi and Ram, Parikshit and Baracaldo, Nathalie and Samulowitz, Horst and Salonidis, Theodoros and Chen, Tianyi},
-  journal={arXiv preprint arXiv:2401.12406},
-  year={2024}
+
+@InProceedings{pmlr-v238-abbas24a,
+  title = 	 { Enhancing In-context Learning via Linear Probe Calibration },
+  author =       {Abbas, Momin and Zhou, Yi and Ram, Parikshit and Baracaldo, Nathalie and Samulowitz, Horst and Salonidis, Theodoros and Chen, Tianyi},
+  booktitle = 	 {Proceedings of The 27th International Conference on Artificial Intelligence and Statistics},
+  year = 	 {2024}
 }
 
 ```
